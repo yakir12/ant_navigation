@@ -1,0 +1,7 @@
+["db.arrow"]
+git-tree-sha1 = "db76b2f4a61f080364a56daba663b2c2a088c168"
+lazy = true
+
+    [["db.arrow".download]]
+    sha256 = "516dfd7026ca576fbcd0de1d863a4867ae772244fae08453ec32bb1feeb018b4"
+    url = "https://s3.eu-central-1.amazonaws.com/vision-group-file-sharing/Data%20backup%20and%20storage/Ayse/ant%20navigation/db.arrow.tar.gz"
