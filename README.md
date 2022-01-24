@@ -1,5 +1,5 @@
 # Short range navigation in ants
-This is all the code needed to retrieve and analyse the data from the Short range navigation in ants experiments. It produces the figures used in the article as well as some result `.csv` files.
+This is all the code needed to retrieve and analyse the data from the "Short range navigation in ants" experiments. It produces the figures used in the article as well as some result `.csv` files.
 
 ## Requirements
 
@@ -12,7 +12,7 @@ Entry point #1, `track`, requires Matlab™ and Matlab™'s Computer Vision Syst
 Both entry points require Julia to be installed (see [here](https://julialang.org/downloads/) for instructions on how to install Julia).
 
 ## How to use
-1. Download this repository.
+1. Download this repository (e.g. `git clone https://github.com/yakir12/ant_navigation`).
 2. Start a new Julia REPL inside `track` or `analyse` depending on your needs.
 3. Run the `main.jl` file (e.g. `include("main.jl")` in the REPL).
 4. All the tracks, figures, and statistics have been generated in the `results` folder.
