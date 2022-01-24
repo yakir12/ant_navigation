@@ -1,9 +1,9 @@
 styles = (
           homing        = (label = "homing", linewidth = 1,),
           searching     = (label = "searching", linewidth = 0.5,),
-          turning_point = (label = "turning point", marker    = :dtriangle,),
+          turning_point = (label = "turning point", marker    = '◄'),#:utriangle,),
           dropoff       = (label = "drop-off", marker    = '•', color = :white, strokewidth = 1, markersize = 25),
-          nest          = (label = "nest", marker    = :star5, strokecolor = :white, strokewidth = 0.2),
+          nest          = (label = "nest", marker    = :star5, strokewidth = 0.2),
           fictive_nest  = (label = "fictive nest", marker = :star5, color = :white, strokewidth = 1,),
          )
 
@@ -19,10 +19,10 @@ function plottrack(ax, dropoff, homing, turning_point, searching, fictive_nest, 
   end
   # scatter!(ax, turning_point; color, styles.turning_point...)
   # arrows!(ax, [turning_point], [1normalize(searching[1] - homing[end - 1])]; color, label = "turning point")
-  i = min(length(searching), 2) 
+  i = min(length(searching), 1) 
   j = max(length(homing) - 2, 1) 
   x, y = searching[i] - homing[j]
-  scatter!(ax, turning_point; color, styles.turning_point..., rotations = π/2 + atan(y, x))
+  scatter!(ax, turning_point; color, styles.turning_point..., rotations = π + atan(y, x))
   # text!(ax, "💧"; position = turning_point, rotation = π/2 + atan(reverse(searching[1] - homing[end - 1])...), align = (:center, :center))
 end
 
@@ -32,26 +32,29 @@ function plottracks(ax, dropoff, homing, turning_point, searching, fictive_nest,
     scatter!(ax, dropoff[1]; strokecolor = color, styles.dropoff...)
     scatter!(ax, fictive_nest[1]; strokecolor = color, styles.fictive_nest...)
   else
-    scatter!(ax, nest[1]; color, styles.nest...)
+    scatter!(ax, nest[1]; styles.nest..., color, strokecolor = color)
   end
 end
 
 function plottracks(df; color = :black)
-   # fig = Figure()
-   fig = Figure(resolution = (600, 900))
+   fig = Figure()
+   # fig = Figure(resolution = (600, 900))
   for (i, (k, gd)) in enumerate(pairs(groupby(df, :treatment, sort = true)))
-    ax = Axis(fig[1,i], aspect = DataAspect(), title = string(k...), ylabel = "Y (cm)")
+    ax = Axis(fig[1,i], 
+              # aspect = DataAspect(),
+              autolimitaspect = 1,
+              title = string(k...), ylabel = "Y (cm)")
     plottracks(ax, gd.dropoff, gd.homing, gd.turning_point, gd.searching, gd.fictive_nest, gd.nest, gd.figure, color)
-    colsize!(fig.layout, i, Auto(1))
+    # colsize!(fig.layout, i, Auto(1))
   end
   axs = contents(fig[1, :])
   linkaxes!(axs...)
   hideydecorations!.(axs[2:end], grid = false)
   Label(fig[2,:], "X (cm)", tellwidth = false, tellheight = true)
-  Legend(fig[3, :], axs[1], nbanks = 2, orientation = :horizontal, tellwidth = false, tellheight = true, merge = true, unique = true)
+  Legend(fig[3, :], axs[1], nbanks = 1, orientation = :horizontal, tellwidth = false, tellheight = true, merge = true, unique = true)
   rowsize!(fig.layout, 1, Aspect(1,1))
   # resize!(fig.scene, gridlayoutsize(fig.layout) .+ (1, 1))
-  resize_to_layout!(fig)
+  # resize_to_layout!(fig)
   fig
 end
 

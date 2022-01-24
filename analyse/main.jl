@@ -9,23 +9,19 @@ using Arrow, DataFrames, CairoMakie, Statistics, LinearAlgebra, CSV, Dates, Chai
 import IterTools:partition
 import CairoMakie: Point2f0
 
-# const conf = ConfParse("configuration.ini")
-# parse_conf!(conf)
-
 include("plots.jl") # plotting functions
 include("utils.jl") # some utility functions
 
 results = joinpath("..", "results") # name of the folder where all the results will get saved
 mkpath(results)
-link = artifact"db.arrow/db.arrow"
-df = @chain link begin
+tbl = artifact"db.arrow/db.arrow"
+df = @chain tbl begin
   Arrow.Table # transform to an arrow table
   DataFrame # transform to a dataframe
   transform(
             [:dropoff, :fictive_nest, :nest, :feeder] .=> ByRow(passmissing(Point2)) .=> [:dropoff, :fictive_nest, :nest, :feeder],
             [:t, :tp] => ByRow((t, tp) -> ceil(Int, t[tp] - t[1])) => :tp,
             :rawcoords => ByRow(filter_jump) => :coords,
-            # :coords => ByRow(x -> Point2f0.(x)) => :coords,
             [:Experiment, :treatment] => ByRow(to_figure) => :figure, # what figure
             :treatment => ByRow(treatments) => :treatment
            )
@@ -38,8 +34,6 @@ df = @chain link begin
             [:turning_point, :dropoff] => ByRow(angle2tp) => "angle to TP",
             :searching => ByRow(mean ∘ skipmissing) => "center of search",
            )
-  # filter(:homing => >(1)∘length, _) # remove runs where the homing section is just one point
-  # filter(:searching => >(1)∘length, _)
   @aside @chain _ begin
     select(Not(Cols(["feeder to nest", "pellets", "coords", "t", "tp", "rawcoords", "figure", "homing", "searching"])))
     transform([:dropoff, :fictive_nest, :nest, :feeder] .=> ByRow(passmissing(Tuple)) .=> [:dropoff, :fictive_nest, :nest, :feeder])
