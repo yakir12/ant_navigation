@@ -19,7 +19,9 @@ function plottrack(ax, dropoff, homing, turning_point, searching, fictive_nest, 
   end
   # scatter!(ax, turning_point; color, styles.turning_point...)
   # arrows!(ax, [turning_point], [1normalize(searching[1] - homing[end - 1])]; color, label = "turning point")
-  x, y = length(homing) == 1 ? searching[2] - homing[1] : searching[1] - homing[end - 1]
+  i = min(length(searching), 2) 
+  j = max(length(homing) - 2, 1) 
+  x, y = searching[i] - homing[j]
   scatter!(ax, turning_point; color, styles.turning_point..., rotations = π/2 + atan(y, x))
   # text!(ax, "💧"; position = turning_point, rotation = π/2 + atan(reverse(searching[1] - homing[end - 1])...), align = (:center, :center))
 end
@@ -35,18 +37,21 @@ function plottracks(ax, dropoff, homing, turning_point, searching, fictive_nest,
 end
 
 function plottracks(df; color = :black)
-  fig = Figure()
+   # fig = Figure()
+   fig = Figure(resolution = (600, 900))
   for (i, (k, gd)) in enumerate(pairs(groupby(df, :treatment, sort = true)))
     ax = Axis(fig[1,i], aspect = DataAspect(), title = string(k...), ylabel = "Y (cm)")
     plottracks(ax, gd.dropoff, gd.homing, gd.turning_point, gd.searching, gd.fictive_nest, gd.nest, gd.figure, color)
+    colsize!(fig.layout, i, Auto(1))
   end
   axs = contents(fig[1, :])
   linkaxes!(axs...)
   hideydecorations!.(axs[2:end], grid = false)
   Label(fig[2,:], "X (cm)", tellwidth = false, tellheight = true)
-  Legend(fig[3, :], axs[1], orientation = :horizontal, tellwidth = false, tellheight = true, merge = true, unique = true)
+  Legend(fig[3, :], axs[1], nbanks = 2, orientation = :horizontal, tellwidth = false, tellheight = true, merge = true, unique = true)
   rowsize!(fig.layout, 1, Aspect(1,1))
   # resize!(fig.scene, gridlayoutsize(fig.layout) .+ (1, 1))
+  resize_to_layout!(fig)
   fig
 end
 

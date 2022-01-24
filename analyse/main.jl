@@ -7,6 +7,7 @@ using LazyArtifacts
 
 using Arrow, DataFrames, CairoMakie, Statistics, LinearAlgebra, CSV, Dates, Chain, Colors, Missings, StructArrays, IntervalSets, Interpolations, Dierckx, StatsBase
 import IterTools:partition
+import CairoMakie: Point2f0
 
 # const conf = ConfParse("configuration.ini")
 # parse_conf!(conf)
