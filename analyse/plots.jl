@@ -5,6 +5,7 @@ styles = (
           dropoff       = (label = "drop-off", marker    = '•', color = :white, strokewidth = 1, markersize = 25),
           nest          = (label = "nest", marker    = :star5, strokewidth = 0.2),
           fictive_nest  = (label = "fictive nest", marker = :star5, color = :white, strokewidth = 1,),
+          # point10       = (label = "point@10", marker    = '+', markersize = 10),#:utriangle,),
          )
 
 make_transparent(c) = RGBA(RGB(CairoMakie.to_color(c)), 0.5)
@@ -17,6 +18,9 @@ function plottrack(ax, dropoff, homing, turning_point, searching, fictive_nest, 
   if figure == :displacement
     scatter!(ax, dropoff; strokecolor = color, styles.dropoff...)
   end
+  # if figure == :displacement
+  #   scatter!(ax, point10; color, styles.point10...)
+  # end
   # scatter!(ax, turning_point; color, styles.turning_point...)
   # arrows!(ax, [turning_point], [1normalize(searching[1] - homing[end - 1])]; color, label = "turning point")
   i = min(length(searching), 1) 

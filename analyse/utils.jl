@@ -138,6 +138,19 @@ function angle2tp(dropoff, tp)
   return α
 end
 
+function find10(xy, l = 10)
+  p0 = xy[1]
+  s = 0.0
+  for p1 in xy[2:end]
+    s += ismissing(p1) ? 0.0 : norm(p1 - p0)
+    s > l && return p0
+    p0 = p1
+  end
+  return xy[end]
+end
+
+
+
 
 # n = 100
 # v = Float64.(collect(n:-1:1))

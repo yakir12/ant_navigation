@@ -28,7 +28,8 @@ df = @chain tbl begin
   @rtransform(
               :homing = :coords[1 : :tp],
               :turning_point = :coords[:tp],
-              :searching = :coords[:tp:end]
+              :searching = :coords[:tp:end],
+              # :point10 = find10(:coords)
              )
   @rtransform(
               $"angle to YP" = angle2tp(:dropoff, :turning_point),
